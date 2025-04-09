@@ -35,68 +35,21 @@ POSTAL_CODE_CATEGORIES = {
 
 # Liste des produits à rechercher (version généraliste et précise)
 product_list = [
-    "Lait demi-écrémé",
-    "Oeufs de poules élevées",
-    "Yaourts nature",
-    "Camembert",
-    "Beurre doux",
-    "Pain complet aux céréales",
-    "Baguettes traditionnelles",
-    "Special K",
-    "Farine de blé",
-    "Sucre de canne poudre",
-    "Capsule café Nespresso",
-    "Thé noir Twinings",
-    "Confiture",
-    "Miel naturel",
-    "Jus d'orange",
-    "Eau gazeuse Badoit",
-    "Riz basmati",
-    "Spaghetti",
-    "Pommes de terre",
-    "Lentilles vertes",
-    "Conserves de tomates pelées",
-    "Bouillon cube bio",
-    "Pommes Golden",
-    "Bananes",
-    "Oranges à jus",
-    "Citrons",
-    "Raisins sans pépins",
-    "Tomates",
-    "Carottes",
-    "Oignons jaunes",
-    "Salade verte",
-    "Concombres",
-    "Poivrons",
-    "Courgettes",
-    "Aubergine",
-    "Filet Blanc de poulet",
-    "Steak haché",
-    "Knackis",
-    "Filets de poisson blanc",
-    "Huile d’olive extra vierge",
-    "Vinaigre balsamique",
-    "Sel marin",
-    "Poivre noir",
-    "Ducros basilic",
-    "Granola",
-    "Chocolat noir",
-    "Papier toilette",
-    "Sacs poubelles biodégradables",
-    "Liquide vaisselle",
-    "Lessive hypoallergénique",
-    "Nettoyant multi-usage",
-    "Éponges de cuisine",
-    "Shampooing",
-    "Gel douche",
-    "Dentifrice",
-    "Savon mains",
-    "Mouchoirs en papier",
-    "Papier aluminium",
+    "Lait demi-écrémé", "Oeufs de poules élevées", "Yaourts nature", "Camembert",
+    "Beurre doux", "Pain complet aux céréales", "Baguettes traditionnelles", "Special K",
+    "Farine de blé", "Sucre de canne poudre", "Capsule café Nespresso", "Thé noir Twinings",
+    "Confiture", "Miel naturel", "Jus d'orange", "Eau gazeuse Badoit", "Riz basmati",
+    "Spaghetti", "Pommes de terre", "Lentilles vertes", "Conserves de tomates pelées",
+    "Bouillon cube bio", "Pommes Golden", "Bananes", "Oranges à jus", "Citrons",
+    "Raisins sans pépins", "Tomates", "Carottes", "Oignons jaunes", "Salade verte",
+    "Concombres", "Poivrons", "Courgettes", "Aubergine", "Filet Blanc de poulet",
+    "Steak haché", "Knackis", "Filets de poisson blanc", "Huile d’olive extra vierge",
+    "Vinaigre balsamique", "Sel marin", "Poivre noir", "Ducros basilic", "Granola",
+    "Chocolat noir", "Papier toilette", "Sacs poubelles biodégradables", "Liquide vaisselle",
+    "Lessive hypoallergénique", "Nettoyant multi-usage", "Éponges de cuisine", "Shampooing",
+    "Gel douche", "Dentifrice", "Savon mains", "Mouchoirs en papier", "Papier aluminium",
     "Sacs de congélation"
 ]
-
-
 
 # Nom du fichier CSV de sortie
 csv_filename = f"prix_produits_auchan_parallel_{NUM_WORKERS}_workers.csv"
@@ -141,15 +94,15 @@ def get_chrome_options():
     chrome_options.add_argument("--start-maximized")
     chrome_options.add_argument("--disable-notifications")
     chrome_options.add_argument('--log-level=3')
-    # chrome_options.add_argument("--headless") # Keep headless commented out for easier debugging initially
+    # chrome_options.add_argument("--headless") # Garder en commentaire pour débogage facile au début
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
-    # Use a common user agent
+    # Utiliser un user agent commun
     chrome_options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/118.0.0.0 Safari/537.36")
     chrome_options.add_argument('--lang=fr-FR')
-    # Suppress webdriver manager logs and selenium logs
+    # Supprimer les logs de webdriver manager et selenium
     chrome_options.add_experimental_option('excludeSwitches', ['enable-logging'])
-    os.environ['WDM_LOG_LEVEL'] = '0' # Suppress webdriver-manager logs specifically
+    os.environ['WDM_LOG_LEVEL'] = '0' # Supprimer spécifiquement les logs de webdriver-manager
     return chrome_options
 
 # --- Fonction utilitaire pour cliquer (inchangée) ---
@@ -162,7 +115,7 @@ def safe_click(driver, element_or_locator, wait_obj=None, scroll=True, scroll_tr
             element = wait_obj.until(EC.element_to_be_clickable(element_or_locator))
         else: # WebElement
             try:
-                element_or_locator.is_displayed() # Basic check
+                element_or_locator.is_displayed() # Vérification basique
                 element = wait_obj.until(EC.element_to_be_clickable(element_or_locator))
             except StaleElementReferenceException:
                 print(f"  WARN: safe_click: WebElement {locator_str} stale avant wait.")
@@ -181,7 +134,7 @@ def safe_click(driver, element_or_locator, wait_obj=None, scroll=True, scroll_tr
                     break
                  except StaleElementReferenceException:
                     print(f"  WARN: safe_click: Élément {locator_str} stale pendant/après scroll (essai {current_try + 1}).")
-                    return False # Can't click a stale element
+                    return False # Impossible de cliquer sur un élément stale
                  except TimeoutException:
                     if current_try == scroll_tries - 1: print(f"  WARN: safe_click: Élément {locator_str} non cliquable après {scroll_tries} scrolls. Tentative JS."); pass
                     else: time.sleep(0.6) # Attendre avant de réessayer le scroll
@@ -210,6 +163,7 @@ def safe_click(driver, element_or_locator, wait_obj=None, scroll=True, scroll_tr
     except Exception as e: print(f"  ERREUR: safe_click: Erreur majeure inattendue pour {locator_str}. Erreur: {e}"); return False
 
 # --- Fonction pour prendre une capture d'écran (modifiée pour inclure CP) ---
+# NOTE : Cette fonction EST CONSERVÉE pour les erreurs MAJEURES.
 def take_screenshot(driver, postal_code, filename_prefix="erreur"):
      if driver:
         try:
@@ -218,10 +172,10 @@ def take_screenshot(driver, postal_code, filename_prefix="erreur"):
                 try:
                     os.makedirs(screenshot_dir)
                 except FileExistsError:
-                    pass # Ok if another process created it between check and creation
+                    pass # Ok si un autre processus l'a créé entre la vérif et la création
             timestamp = time.strftime("%Y%m%d_%H%M%S")
             safe_prefix = re.sub(r'[\\/*?:"<>|]', '_', filename_prefix)
-            # Include postal code in filename for uniqueness
+            # Inclure le code postal dans le nom de fichier pour l'unicité
             screenshot_file = os.path.join(screenshot_dir, f"{safe_prefix}_auchan_{postal_code}_{timestamp}.png")
             # S'assurer que le driver est encore utilisable
             if driver.service.is_connectable():
@@ -237,9 +191,9 @@ def take_screenshot(driver, postal_code, filename_prefix="erreur"):
 # --- Fonction Worker pour un code postal ---
 def scrape_postal_code(category, postal_code_to_use):
     """
-    Scrape product data for a single postal code.
-    Handles its own WebDriver instance and exceptions.
-    Returns a list of product data rows for this postal code, or [] on failure.
+    Scrape les données produits pour un code postal unique.
+    Gère sa propre instance WebDriver et ses exceptions.
+    Retourne une liste de lignes de données produits pour ce code postal, ou [] en cas d'échec.
     """
     # *** Chaque processus a sa propre instance WebDriver ***
     driver = None
@@ -255,49 +209,49 @@ def scrape_postal_code(category, postal_code_to_use):
         print(f"--- Étape 0 [{postal_code_to_use}] : Initialisation WebDriver ---")
         try:
             chrome_options = get_chrome_options()
-            # Ensure webdriver-manager downloads drivers to a unique location per process
-            # or handles concurrency correctly (it usually does). If issues arise,
-            # consider pre-downloading or specifying explicit driver paths.
+            # Assurer que webdriver-manager télécharge les drivers dans un emplacement unique par processus
+            # ou gère la concurrence correctement (c'est généralement le cas). Si des problèmes surviennent,
+            # envisager le pré-téléchargement ou la spécification explicite des chemins de driver.
             service = Service(ChromeDriverManager().install())
             driver = webdriver.Chrome(service=service, options=chrome_options)
-            # Waits are local to this driver instance
-            long_wait = WebDriverWait(driver, 15) # Slightly longer waits might be needed
+            # Les waits sont locaux à cette instance de driver
+            long_wait = WebDriverWait(driver, 15) # Waits légèrement plus longs peuvent être nécessaires
             medium_wait = WebDriverWait(driver, 10)
             short_wait = WebDriverWait(driver, 5)
             print(f"[{postal_code_to_use}] WebDriver initialisé.")
-            time.sleep(0.5) # Pause after init
+            time.sleep(0.5) # Pause après init
         except WebDriverException as e_init:
             print(f"[{postal_code_to_use}] ERREUR FATALE Initialisation WebDriver: {e_init}")
             print(traceback.format_exc())
-            # Cannot proceed without a driver
-            raise # Propagate to the outer try/except of this function
+            # Impossible de continuer sans driver
+            raise # Propager vers le try/except externe de cette fonction
 
         # --- Étape 1 : Aller sur le site ---
         print(f"--- Étape 1 [{postal_code_to_use}] : Navigation vers {url_to_visit} ---")
         driver.get(url_to_visit)
         long_wait.until(lambda d: d.execute_script('return document.readyState') == 'complete')
         print(f"[{postal_code_to_use}] Page chargée.")
-        time.sleep(1.0) # Increased pause
+        time.sleep(1.0) # Pause augmentée
 
         # --- Étape 2 : Accepter les cookies ---
         print(f"--- Étape 2 [{postal_code_to_use}] : Acceptation cookies ---")
         try:
-            # Use a longer wait specifically for the cookie button
+            # Utiliser un wait plus long spécifiquement pour le bouton cookie
             cookie_button = WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, cookie_accept_button_id)))
             if safe_click(driver, cookie_button, wait_obj=short_wait, scroll=False):
                 print(f"[{postal_code_to_use}] Cookies acceptés.")
-                time.sleep(1.0) # Pause after interaction
+                time.sleep(1.0) # Pause après interaction
             else:
-                print(f"WARN [{postal_code_to_use}]: Cookie button found but safe_click failed.")
+                print(f"WARN [{postal_code_to_use}]: Bouton cookie trouvé mais safe_click a échoué.")
         except TimeoutException:
-            print(f"INFO [{postal_code_to_use}]: Cookie banner not found/timed out.")
+            print(f"INFO [{postal_code_to_use}]: Bannière cookie non trouvée/timeout.")
         except Exception as e_cookie:
             print(f"WARN (non-blocking) cookies {postal_code_to_use} : {e_cookie}")
 
         # --- Étape 3 : Cliquer sur le bouton initial ---
         print(f"--- Étape 3 [{postal_code_to_use}] : Clic bouton contexte ---")
         initial_button_clicked = False
-        initial_button_wait = WebDriverWait(driver, 20) # Longer wait for this critical button
+        initial_button_wait = WebDriverWait(driver, 20) # Wait plus long pour ce bouton critique
         try:
             initial_button_locator = (By.XPATH, f"{initial_context_button_xpath} | {initial_context_button_xpath_alternative}")
             print(f"[{postal_code_to_use}] Attente bouton initial...")
@@ -311,16 +265,17 @@ def scrape_postal_code(category, postal_code_to_use):
             if safe_click(driver, initial_button, wait_obj=medium_wait):
                 initial_button_clicked = True
                 print(f"[{postal_code_to_use}] Clic bouton initial réussi.")
-                time.sleep(1.5) # Longer pause after this crucial click
+                time.sleep(1.5) # Pause plus longue après ce clic crucial
             else:
                 print(f"ERREUR [{postal_code_to_use}]: safe_click a échoué bouton initial.")
-                # Error raised below
+                # Erreur levée ci-dessous
 
         except TimeoutException:
             print(f"ERREUR [{postal_code_to_use}]: Timeout - Aucun bouton initial cliquable trouvé.")
-            # Error raised below
+            # Erreur levée ci-dessous
 
         if not initial_button_clicked:
+            # PRENDRE UN SCREENSHOT ICI CAR C'EST UNE ERREUR CRITIQUE DE CONFIGURATION
             take_screenshot(driver, postal_code_to_use, "erreur_bouton_initial")
             raise ElementNotInteractableException(f"Échec final clic bouton contexte initial pour {postal_code_to_use}.")
 
@@ -343,23 +298,23 @@ def scrape_postal_code(category, postal_code_to_use):
             postal_input_element.clear(); time.sleep(0.2)
             postal_input_element.send_keys(postal_code_to_use)
             print(f"[{postal_code_to_use}] CP '{postal_code_to_use}' saisi.")
-            time.sleep(1.5) # Wait longer for suggestions
+            time.sleep(1.5) # Attendre plus longtemps pour les suggestions
 
             print(f"[{postal_code_to_use}] Attente et clic suggestion...")
             suggestion_clicked = False
             try:
-                 # Wait for the list itself to be visible first
+                 # Attendre que la liste elle-même soit visible d'abord
                 WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, suggestion_list_xpath)))
-                # Then wait for at least one list item
+                # Puis attendre au moins un élément de liste
                 WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.XPATH, f"{suggestion_list_xpath}//li")))
 
                 first_suggestion_xpath = first_suggestion_xpath_template.format(postal_code=postal_code_to_use)
-                # Be more lenient with finding the specific suggestion
+                # Être plus indulgent pour trouver la suggestion spécifique
                 suggestion_element = WebDriverWait(driver, 8).until(EC.element_to_be_clickable((By.XPATH, first_suggestion_xpath)))
 
                 if safe_click(driver, suggestion_element, wait_obj=short_wait, scroll=False):
                     print(f"[{postal_code_to_use}] Clic suggestion effectué.")
-                    suggestion_clicked = True; time.sleep(2.0) # Longer pause after suggestion click
+                    suggestion_clicked = True; time.sleep(2.0) # Pause plus longue après clic suggestion
                 else:
                     print(f"WARN [{postal_code_to_use}]: Clic suggestion échoué via safe_click.")
 
@@ -375,7 +330,7 @@ def scrape_postal_code(category, postal_code_to_use):
                     for sel in postal_input_selectors:
                          try:
                               postal_input_element_refind = WebDriverWait(driver, 5).until(EC.element_to_be_clickable((By.CSS_SELECTOR, sel)))
-                              # Check if the value still matches (important!)
+                              # Vérifier si la valeur correspond toujours (important !)
                               if postal_input_element_refind.get_attribute('value') == postal_code_to_use:
                                   postal_input_element_refind.send_keys(Keys.RETURN)
                                   print(f"[{postal_code_to_use}] Touche ENTRÉE envoyée."); input_found_for_enter = True; time.sleep(2.0); break
@@ -384,7 +339,7 @@ def scrape_postal_code(category, postal_code_to_use):
                         raise NoSuchElementException(f"Échec relocalisation input ou valeur incorrecte pour fallback ENTRÉE - CP {postal_code_to_use}")
                 except Exception as e_enter_fallback:
                      print(f"ERREUR [{postal_code_to_use}]: Échec fallback ENTRÉE: {e_enter_fallback}")
-                     raise # Propagate if fallback fails
+                     raise # Propager si le fallback échoue
 
         except (TimeoutException, NoSuchElementException, ElementNotInteractableException) as e:
             print(f"ERREUR Critique (Étape 4 - {postal_code_to_use}): {e}"); raise
@@ -395,7 +350,7 @@ def scrape_postal_code(category, postal_code_to_use):
         print(f"--- Étape 5 [{postal_code_to_use}] : Sélection premier magasin ---")
         try:
             print(f"[{postal_code_to_use}] Attente liste magasins...")
-            # Wait specifically for the button inside the container, longer timeout
+            # Attendre spécifiquement le bouton à l'intérieur du conteneur, timeout plus long
             WebDriverWait(driver, 25).until(
                 EC.presence_of_element_located((By.XPATH, f"{store_list_container_xpath}//button[contains(translate(normalize-space(), 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', 'abcdefghijklmnopqrstuvwxyz'), 'choisir')]"))
             )
@@ -408,9 +363,11 @@ def scrape_postal_code(category, postal_code_to_use):
                     message_element = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.XPATH, no_result_msg_xpath)))
                     message = message_element.text.strip()
                     print(f"INFO [{postal_code_to_use}]: Aucun magasin trouvé. Message: '{message}'")
-                    store_selected_for_cp = False # Keep false
+                    store_selected_for_cp = False # Garder false
                 except TimeoutException:
                      print(f"ERREUR [{postal_code_to_use}]: Liste magasins vide et pas de message 'aucun'.");
+                     # PRENDRE UN SCREENSHOT ICI CAR C'EST UN BLOCAGE MAJEUR
+                     take_screenshot(driver, postal_code_to_use, "erreur_aucun_magasin_detecte")
                      raise NoSuchElementException(f"Aucun container magasin trouvé et pas de message clair pour {postal_code_to_use}.")
             else:
                 first_store_container = store_containers[0]
@@ -418,17 +375,17 @@ def scrape_postal_code(category, postal_code_to_use):
                 try:
                     name_element = first_store_container.find_element(By.XPATH, store_name_xpath); first_store_name = name_element.text.strip().replace('\n', ' ')
                     print(f"[{postal_code_to_use}] Nom: '{first_store_name}'")
-                    selected_store_name_for_cp = first_store_name # Store name for logging/CSV
+                    selected_store_name_for_cp = first_store_name # Nom du magasin pour log/CSV
                 except NoSuchElementException: print(f"WARN [{postal_code_to_use}]: Nom premier magasin non trouvé.")
 
                 print(f"[{postal_code_to_use}] Recherche/clic bouton sélection...")
                 select_button_locator = (By.XPATH, select_store_button_xpath)
                 try:
-                    # Wait for the button within the *specific container*
+                    # Attendre le bouton dans le *conteneur spécifique*
                     select_button_element = WebDriverWait(first_store_container, medium_wait._timeout).until(EC.element_to_be_clickable(select_button_locator))
-                    if safe_click(driver, select_button_element, wait_obj=short_wait, scroll=True): # Use scroll=True here just in case
+                    if safe_click(driver, select_button_element, wait_obj=short_wait, scroll=True): # Utiliser scroll=True ici au cas où
                         print(f"[{postal_code_to_use}] Magasin '{selected_store_name_for_cp}' sélectionné.");
-                        store_selected_for_cp = True; time.sleep(2.5) # Longer pause after store selection
+                        store_selected_for_cp = True; time.sleep(2.5) # Pause plus longue après sélection magasin
                     else:
                         raise ElementClickInterceptedException(f"safe_click échec bouton sélection magasin {postal_code_to_use}.")
                 except TimeoutException: print(f"ERREUR [{postal_code_to_use}]: Bouton sélection non trouvé/cliquable DANS magasin."); raise
@@ -450,7 +407,7 @@ def scrape_postal_code(category, postal_code_to_use):
                     search_submitted_successfully = False
                     print(f"[{postal_code_to_use}] Localisation barre recherche...")
                     input_located = False; search_input_element = None
-                    # Longer wait for search bar as page might still be settling
+                    # Wait plus long pour la barre de recherche car la page pourrait encore se charger
                     search_wait = WebDriverWait(driver, 15)
                     for i, selector in enumerate(search_input_selectors):
                         try:
@@ -460,8 +417,8 @@ def scrape_postal_code(category, postal_code_to_use):
                         except TimeoutException:
                             if i == len(search_input_selectors) - 1:
                                  print(f"WARN [{postal_code_to_use}/{search_term}]: Input recherche non trouvé. Tentative refresh.")
-                                 driver.refresh(); time.sleep(3) # Longer sleep after refresh
-                                 # Retry finding after refresh
+                                 driver.refresh(); time.sleep(3) # Pause plus longue après refresh
+                                 # Réessayer de trouver après refresh
                                  search_wait_retry = WebDriverWait(driver, 15)
                                  for j, sel_retry in enumerate(search_input_selectors):
                                      try:
@@ -471,18 +428,18 @@ def scrape_postal_code(category, postal_code_to_use):
                                      except TimeoutException:
                                           if j == len(search_input_selectors) - 1: raise TimeoutException(f"Input recherche non trouvé même post-refresh ('{search_term}' / {postal_code_to_use}).")
                                           else: continue
-                                 if input_located: break # Break outer loop if found after refresh
+                                 if input_located: break # Sortir de la boucle externe si trouvé après refresh
                             else: continue
                     if not input_located: raise NoSuchElementException(f"Barre recherche non localisée ('{search_term}' / {postal_code_to_use}).")
 
-                    # Sometimes clearing fails if element is stale right after finding it
+                    # Parfois clear échoue si l'élément est stale juste après l'avoir trouvé
                     try:
                         search_input_element.clear(); time.sleep(0.5)
                         search_input_element.send_keys(search_term)
                         print(f"[{postal_code_to_use}] Terme '{search_term}' saisi."); time.sleep(0.7)
                     except StaleElementReferenceException:
                         print(f"WARN [{postal_code_to_use}/{search_term}]: Input recherche stale post-localisation. Relocalisation...")
-                        # Relocalize before sending keys again
+                        # Relocaliser avant d'envoyer les clés à nouveau
                         input_located = False
                         for i, selector in enumerate(search_input_selectors):
                            try:
@@ -498,18 +455,18 @@ def scrape_postal_code(category, postal_code_to_use):
 
                     print(f"[{postal_code_to_use}] Tentative prioritaire: ENTRÉE...")
                     try:
-                        # Find element again to ensure it's fresh before sending Keys.RETURN
+                        # Trouver l'élément à nouveau pour s'assurer qu'il est frais avant d'envoyer Keys.RETURN
                         input_found_for_enter = False
                         for selector_refind in search_input_selectors:
                               try:
                                   search_input_element_refind = WebDriverWait(driver, 5).until(EC.presence_of_element_located((By.CSS_SELECTOR, selector_refind)))
                                   if search_input_element_refind.is_displayed() and search_input_element_refind.get_attribute('value') == search_term:
-                                      search_input_element_refind.send_keys(Keys.RETURN); print(f"[{postal_code_to_use}] Touche ENTRÉE envoyée."); search_submitted_successfully = True; input_found_for_enter = True; time.sleep(2.5); break # Longer pause after search submit
-                              except: continue # Ignore errors like StaleElement etc. here, just try next selector
+                                      search_input_element_refind.send_keys(Keys.RETURN); print(f"[{postal_code_to_use}] Touche ENTRÉE envoyée."); search_submitted_successfully = True; input_found_for_enter = True; time.sleep(2.5); break # Pause plus longue après soumission recherche
+                              except: continue # Ignorer les erreurs comme StaleElement etc. ici, essayer juste le sélecteur suivant
                         if not input_found_for_enter: print(f"WARN [{postal_code_to_use}/{search_term}]: Input non retrouvé/correspondant pour Entrée. Fallback."); search_submitted_successfully = False
                     except Exception as e_enter_search: print(f"  WARN [{postal_code_to_use}/{search_term}]: Échec envoi ENTRÉE: {e_enter_search}"); search_submitted_successfully = False
 
-                    # Fallback strategies (Button click, JS submit) - Code largely unchanged
+                    # Stratégies de fallback (Clic bouton, soumission JS) - Code largement inchangé
                     if not search_submitted_successfully:
                         print(f"[{postal_code_to_use}/{search_term}] Fallback 1: Clic bouton recherche...")
                         for i, selector in enumerate(search_button_selectors):
@@ -524,7 +481,7 @@ def scrape_postal_code(category, postal_code_to_use):
                              try:
                                   search_form = driver.find_element(By.CSS_SELECTOR if not selector.startswith('/') else By.XPATH, selector)
                                   try:
-                                      # Try finding the specific input within this form again
+                                      # Essayer de trouver l'input spécifique dans ce formulaire à nouveau
                                       form_input = WebDriverWait(search_form, 2).until(
                                           EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='search'], input[name='text'], input[id*='search']"))
                                       )
@@ -543,37 +500,37 @@ def scrape_postal_code(category, postal_code_to_use):
                         print(f"[{postal_code_to_use}/{search_term}] Attente chargement résultats...")
                         try:
                             results_header_xpath = f"//*[normalize-space()='Votre recherche :'] | //h1[contains(.,'{search_term}')] | //*[contains(@class,'searchResults__title')] | //h1[contains(@class,'site-breadcrumb__title')]"
-                            # Longer wait for results validation
+                            # Wait plus long pour la validation des résultats
                             results_wait = WebDriverWait(driver, 20)
                             results_wait.until( EC.any_of(
                                    EC.visibility_of_element_located((By.XPATH, results_header_xpath)),
                                    EC.presence_of_element_located((By.XPATH, product_list_container_xpath)),
-                                   # Check if URL contains part of the search term (less reliable)
+                                   # Vérifier si l'URL contient une partie du terme de recherche (moins fiable)
                                    # EC.url_contains(search_term.split(' ')[0].lower().replace("'", ""))
                                ) )
                             print(f"[{postal_code_to_use}/{search_term}] Page résultats chargée. Vérification conteneur produits...")
-                            # Also wait explicitly for the product container
+                            # Attendre aussi explicitement le conteneur produits
                             WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, product_list_container_xpath)))
-                            print(f"[{postal_code_to_use}/{search_term}] Conteneur produits présent."); time.sleep(1.0) # Pause after results load
+                            print(f"[{postal_code_to_use}/{search_term}] Conteneur produits présent."); time.sleep(1.0) # Pause après chargement résultats
                         except TimeoutException:
-                            # Check for "no results" message only if the primary validation failed
+                            # Vérifier le message "aucun résultat" seulement si la validation primaire a échoué
                             no_results_xpath = "//*[contains(text(), 'aucun produit ne correspond') or contains(text(), 'aucun résultat') or contains(@class,'searchEmptyResult') or contains(@class,'no-result')]"
                             try:
                                 WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.XPATH, no_results_xpath)))
-                                print(f"INFO [{postal_code_to_use}/{search_term}]: Aucun résultat trouvé. Skip produit."); time.sleep(0.5); continue # Go to next product
+                                print(f"INFO [{postal_code_to_use}/{search_term}]: Aucun résultat trouvé. Skip produit."); time.sleep(0.5); continue # Passer au produit suivant
                             except TimeoutException:
                                 print(f"ERREUR [{postal_code_to_use}/{search_term}]: Validation résultats échouée (ni titre/produits/msg 'aucun').");
+                                # PRENDRE UN SCREENSHOT ICI CAR LA VALIDATION A ÉCHOUÉ SÉVÈREMENT
                                 take_screenshot(driver, postal_code_to_use, f"erreur_validation_{search_term[:10]}")
-                                # Decide whether to continue to sort (might work) or skip product (safer)
-                                # Let's skip the product if validation fails hard
+                                # Passer au produit suivant est plus sûr si la validation échoue
                                 continue
                     else:
-                        # This case should technically be caught by the raise Exception above
+                        # Ce cas devrait techniquement être intercepté par le raise Exception ci-dessus
                         raise Exception(f"Recherche non soumise avec succès ('{search_term}' / {postal_code_to_use}).")
 
 
                     # --- ÉTAPE 7 : TRI ---
-                    # (Code unchanged, but benefits from waits/driver specific to this process)
+                    # (Code inchangé, mais bénéficie des waits/driver spécifiques à ce processus)
                     print(f"\n--- [{postal_code_to_use}] Étape 7 : Tri 'Meilleures ventes' pour '{search_term}' ---")
                     try:
                         print(f"[{postal_code_to_use}/{search_term}] Localisation <select> tri...");
@@ -587,70 +544,78 @@ def scrape_postal_code(category, postal_code_to_use):
                         select_object.select_by_value(best_seller_option_value);
                         print(f"[{postal_code_to_use}/{search_term}] Option sélectionnée.")
                         print(f"[{postal_code_to_use}/{search_term}] Attente MàJ post-tri...");
-                        time.sleep(1.0) # Pause before waiting for update
+                        time.sleep(1.0) # Pause avant d'attendre la MàJ
                         try:
-                            update_wait = WebDriverWait(driver, 15) # Longer wait for update
-                            # Wait for staleness of an old element OR presence of new list/item
-                            # This is tricky; waiting for presence of container is often sufficient
+                            update_wait = WebDriverWait(driver, 15) # Wait plus long pour la MàJ
+                            # Attendre la staleness d'un ancien élément OU la présence d'une nouvelle liste/item
+                            # C'est délicat ; attendre la présence du conteneur est souvent suffisant
                             update_wait.until(EC.presence_of_element_located((By.XPATH, f"{product_list_container_xpath} | {product_article_xpath}")))
                             print(f"[{postal_code_to_use}/{search_term}] MàJ post-tri détectée.");
-                            time.sleep(2.0) # Longer pause post-sort
+                            time.sleep(2.0) # Pause plus longue post-tri
                         except TimeoutException:
                             print(f"WARN [{postal_code_to_use}/{search_term}]: Timeout attente MàJ post-tri.")
                         print(f"[{postal_code_to_use}/{search_term}] Tri terminé.")
                     except (TimeoutException, NoSuchElementException) as e:
                          print(f"AVERTISSEMENT (Étape 7 - Tri {search_term}/{postal_code_to_use}): Échec. {type(e).__name__}: {e}.");
+                         # PRENDRE UN SCREENSHOT ICI CAR L'ÉCHEC DU TRI EST SIGNIFICATIF
                          take_screenshot(driver, postal_code_to_use, f"erreur_etape7_tri_{search_term[:10]}")
                     except Exception as e:
                          print(f"ERREUR inattendue (Étape 7 - Tri {search_term}/{postal_code_to_use}) : {e}");
+                         # PRENDRE UN SCREENSHOT POUR UNE ERREUR INATTENDUE DE TRI
                          take_screenshot(driver, postal_code_to_use, f"erreur_etape7_tri_inattendue_{search_term[:10]}")
 
                     # --- ÉTAPE 8 : EXTRACTION ---
-                    # (Code unchanged, operates on the current state of the driver)
+                    # (Code inchangé, opère sur l'état actuel du driver)
                     print(f"\n--- [{postal_code_to_use}] Étape 8 : Extraction données '{search_term}' ---")
                     try:
                         print(f"[{postal_code_to_use}/{search_term}] Localisation articles produits...");
-                        # Wait for articles to be present after potential sort/reload
+                        # Attendre que les articles soient présents après tri/rechargement potentiel
                         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, product_article_xpath)))
                         product_articles = driver.find_elements(By.XPATH, product_article_xpath);
                         print(f"[{postal_code_to_use}/{search_term}] Trouvé {len(product_articles)} articles.")
                         if not product_articles:
                             print(f"[{postal_code_to_use}/{search_term}] Aucun produit trouvé sur la page.")
+                            # Pas besoin de screenshot ici, c'est une situation possible après un tri
                         else:
                             num_products_to_extract = min(2, len(product_articles));
                             print(f"[{postal_code_to_use}/{search_term}] Extraction {num_products_to_extract} premiers...")
                             for i in range(num_products_to_extract):
                                 product = product_articles[i]; product_name = "Nom non trouvé"; price_per_unit = "Prix/Unité non trouvé"
                                 try:
-                                    # More robust name finding
+                                    # Trouver le nom de manière plus robuste
                                     name_element = WebDriverWait(product, 3).until(EC.presence_of_element_located((By.XPATH, product_name_relative_xpath)))
                                     product_name = " ".join(name_element.text.split()).strip()
-                                except (NoSuchElementException, TimeoutException, StaleElementReferenceException): pass # Ignore if name not found/stale
+                                except (NoSuchElementException, TimeoutException, StaleElementReferenceException): pass # Ignorer si nom non trouvé/stale
                                 try:
-                                    # More robust price finding
+                                    # Trouver le prix de manière plus robuste
                                     price_element = WebDriverWait(product, 3).until(EC.presence_of_element_located((By.XPATH, product_price_per_unit_relative_xpath)))
                                     price_per_unit = re.sub(r'\s+', ' ', price_element.text.strip()).replace(' l ', '/l ').replace(' kg ', '/kg ')
-                                except (NoSuchElementException, TimeoutException, StaleElementReferenceException): pass # Ignore if price not found/stale
+                                except (NoSuchElementException, TimeoutException, StaleElementReferenceException): pass # Ignorer si prix non trouvé/stale
 
                                 print(f"  [{postal_code_to_use}/{search_term}] Prod {i+1}: Nom='{product_name[:50]}...', Prix/Unité='{price_per_unit}'")
-                                # Append to the list local to this function/process
+                                # Ajouter à la liste locale à cette fonction/processus
                                 local_product_data.append([category, postal_code_to_use, selected_store_name_for_cp, search_term, product_name, price_per_unit])
                     except TimeoutException:
                         print(f"ERREUR (Étape 8 - '{search_term}'/{postal_code_to_use}): Timeout attente articles.");
+                        # PRENDRE UN SCREENSHOT SI L'EXTRACTION GÉNÉRALE ÉCHOUE (pas trouvé le conteneur)
                         take_screenshot(driver, postal_code_to_use, f"erreur_etape8_timeout_{search_term[:10]}")
                     except Exception as e_extract:
                         print(f"ERREUR extraction (Étape 8 - '{search_term}'/{postal_code_to_use}) : {e_extract}");
+                        # PRENDRE UN SCREENSHOT SI L'EXTRACTION GÉNÉRALE ÉCHOUE
                         take_screenshot(driver, postal_code_to_use, f"erreur_etape8_extract_{search_term[:10]}")
 
-                # Gestion erreur PAR PRODUIT (within the product loop)
+                # Gestion erreur PAR PRODUIT (dans la boucle produit)
                 except (TimeoutException, NoSuchElementException, ElementClickInterceptedException, ElementNotInteractableException, StaleElementReferenceException, Exception) as e_product:
                     print(f"\n!!! [{postal_code_to_use}] ERREUR produit '{search_term}'. Skip produit. !!!");
                     print(f"Type: {type(e_product).__name__}, Msg: {e_product}");
+                    # Afficher une trace limitée pour le debug console, mais pas de screenshot
                     print(f"{traceback.format_exc(limit=3)}");
-                    take_screenshot(driver, postal_code_to_use, f"erreur_produit_{search_term[:10]}")
+                    # ----> LIGNE SUPPRIMÉE SELON LA DEMANDE <----
+                    # take_screenshot(driver, postal_code_to_use, f"erreur_produit_{search_term[:10]}")
+                    # ----> FIN DE LA MODIFICATION <----
                     print("!!!\n")
                 finally:
-                     print(f"[{postal_code_to_use}] Fin traitement '{search_term}'. Pause..."); time.sleep(1.0) # Pause between products
+                     print(f"[{postal_code_to_use}] Fin traitement '{search_term}'. Pause..."); time.sleep(1.0) # Pause entre les produits
 
             print(f"\n--- [{postal_code_to_use}] Fin boucle produits ---")
         else:
@@ -667,6 +632,7 @@ def scrape_postal_code(category, postal_code_to_use):
          print(f"Type: {type(e_cp).__name__}"); print(f"Message: {e_cp}")
          print(f"Traceback:\n{traceback.format_exc()}")
          # Essayer de prendre une capture même si le driver est potentiellement KO
+         # CONSERVER CETTE CAPTURE POUR LES ERREURS MAJEURES AU NIVEAU DU CODE POSTAL
          take_screenshot(driver, postal_code_to_use, "erreur_config_CP")
          print(f"Ce code postal sera ignoré.")
          print(f"#######################################################\n")
@@ -709,11 +675,13 @@ if __name__ == "__main__":
     all_product_data = [] # Liste pour agréger TOUS les résultats
 
     # Créer et gérer le pool de processus
-    # Using 'spawn' start method might be more stable across platforms than 'fork' (default on Linux)
-    # multiprocessing.set_start_method('spawn', force=True) # Uncomment if needed, requires testing
+    # Utiliser 'spawn' comme méthode de démarrage pourrait être plus stable sur différentes plateformes que 'fork' (défaut sous Linux)
+    # multiprocessing.set_start_method('spawn', force=True) # Décommenter si besoin, nécessite des tests
     try:
-        with multiprocessing.Pool(processes=NUM_WORKERS) as pool:
-            print(f"\n--- Lancement du pool de {NUM_WORKERS} workers ---")
+        # Utiliser 'maxtasksperchild=1' peut aider à libérer la mémoire en redémarrant les workers après chaque tâche
+        # Cela peut ralentir un peu mais améliore la stabilité pour les longs scrapings.
+        with multiprocessing.Pool(processes=NUM_WORKERS, maxtasksperchild=1) as pool:
+            print(f"\n--- Lancement du pool de {NUM_WORKERS} workers (maxtasksperchild=1) ---")
             # starmap distribue les tâches et bloque jusqu'à ce que toutes soient terminées
             # results_list sera une liste de listes (chaque sous-liste est le résultat de scrape_postal_code)
             results_list = pool.starmap(scrape_postal_code, tasks)
@@ -721,7 +689,7 @@ if __name__ == "__main__":
 
         # Aplatir la liste de listes en une seule liste de résultats
         print("Agrégation des résultats...")
-        all_product_data = [item for sublist in results_list for item in sublist if sublist] # Ensure item is added only if sublist is not None/empty
+        all_product_data = [item for sublist in results_list for item in sublist if sublist] # S'assurer que item est ajouté seulement si sublist n'est pas None/vide
         print(f"Nombre total de lignes de données collectées : {len(all_product_data)}")
 
     except Exception as e_pool:
@@ -729,19 +697,23 @@ if __name__ == "__main__":
         print(f"Type: {type(e_pool).__name__}"); print(f"Message: {e_pool}")
         print(traceback.format_exc())
     finally:
-        print("Fermeture du pool (si ouvert).") # Handled by 'with' statement
+        print("Fermeture du pool (si ouvert).") # Géré par le statement 'with'
 
     # --- ÉTAPE 9 : Écriture CSV FINALE (inchangée, faite par le processus principal) ---
     print(f"\n--- Étape 9 : Écriture résultats CSV ---")
     if all_product_data:
         try:
-            # Assurer que le chemin est absolu ou relatif au script
-            script_dir = os.path.dirname(os.path.abspath(__file__))
+            # Essayer de déterminer le chemin du script pour y placer le CSV
+            try:
+                script_dir = os.path.dirname(os.path.abspath(__file__))
+            except NameError: # __file__ n'est pas défini si exécuté interactivement
+                script_dir = os.getcwd() # Utiliser le répertoire courant comme fallback
             csv_path = os.path.join(script_dir, csv_filename)
+
             print(f"Écriture {len(all_product_data)} lignes dans : {csv_path}")
-            with open(csv_path, 'w', newline='', encoding='utf-8-sig') as csvfile:
+            with open(csv_path, 'w', newline='', encoding='utf-8-sig') as csvfile: # utf-8-sig pour compatibilité Excel
                 csvwriter = csv.writer(csvfile, delimiter=';', quotechar='"', quoting=csv.QUOTE_MINIMAL)
-                # Updated header to include store name
+                # En-tête mis à jour pour inclure le nom du magasin
                 csvwriter.writerow(['Categorie Ville', 'Code Postal', 'Nom Magasin Sélectionné', 'Terme Recherche', 'Nom Produit Extrait', 'Prix par Kilo/Unité'])
                 csvwriter.writerows(all_product_data)
             print(f"Données écrites avec succès dans '{csv_filename}'.")
