@@ -1,0 +1,61 @@
+SYNTHÈSE ET CONCLUSIONS DE L'ANALYSE
+==================================
+
+1. CARACTÉRISTIQUES DU PANIER
+   - Coût moyen du panier: 189.99€
+   - Écart-type: 5.66€
+   - Médiane: 188.94€
+   - Minimum: 177.44€
+   - Maximum: 207.03€
+
+2. RELATION AVEC LA TYPOLOGIE URBAINE (TUU2017)
+   - Corrélation avec TUU2017: 0.2160
+   - Rappel des modalités de TUU2017:
+     1: UU de 2 000 à 4 999 hab
+     2: UU de 5 000 à 9 999 hab
+     3: UU de 10 000 à 19 999 hab
+     4: UU de 20 000 à 49 999 hab
+     5: UU de 50 000 à 99 999 hab
+     6: UU de 100 000 à 199 999 hab
+     7: UU de 200 000 à 1 999 999 hab
+     8: UU de Paris
+
+   - Corrélation positive faible: légère tendance à des paniers
+     plus chers dans les unités urbaines plus grandes.
+3. RELATION AVEC LA TYPOLOGIE URBAINE DÉTAILLÉE (TDUU2017)
+   - Corrélation avec TDUU2017: 0.2054
+   - Rappel: TDUU2017 est une classification plus fine que TUU2017,
+     allant de 11 (UU < 2 500 hab) à 80 (UU de Paris).
+
+   - Coût moyen du panier par groupe d'unité urbaine:
+     UU 100 000-499 999 hab: 187.67€
+     UU 20 000-99 999 hab: 187.88€
+     UU 5 000-19 999 hab: 188.39€
+     UU < 5 000 hab: 189.96€
+     UU de Paris: 195.18€
+     UU ≥ 500 000 hab: 189.93€
+
+   - La corrélation positive avec TDUU2017 confirme la tendance observée avec TUU2017:
+     le coût du panier tend à augmenter avec la taille de l'unité urbaine.
+4. RELATION AVEC LE REVENU MÉDIAN (MED21)
+   - Corrélation avec MED21: 0.1826
+   - Corrélation positive faible: légère tendance à des paniers
+     plus chers dans les zones à revenu médian plus élevé.
+5. MODÈLE DE RÉGRESSION MULTIPLE
+   - R² du modèle: 0.1315
+   - Variables incluses: TUU2017, TDUU2017, MED21
+   - Conclusion: Les variables socio-économiques expliquent peu
+     la variation du coût du panier (R² faible).
+6. CONCLUSIONS GÉNÉRALES
+   - L'imputation hiérarchique a permis de combler les valeurs manquantes
+     tout en respectant les structures spatiales des prix.
+   - Les analyses graphiques révèlent les relations entre structure
+     urbaine, revenu médian et coût du panier de consommation.
+   - Ces résultats permettent de mieux comprendre les disparités
+     territoriales du pouvoir d'achat alimentaire.
+
+7. LIMITES ET PERSPECTIVES
+   - L'imputation reste une estimation et ne remplace pas des données réelles.
+   - Le panier analysé n'est pas pondéré par la fréquence de consommation.
+   - Une analyse temporelle permettrait de suivre l'évolution des prix.
+   - L'intégration d'autres variables socio-économiques enrichirait l'analyse.

@@ -1,0 +1,19 @@
+RÉSULTATS DE LA RÉGRESSION MULTIPLE
+==================================
+
+Variable dépendante: cout_panier_impute
+Variables indépendantes: TUU2017, TDUU2017, MED21
+
+R² du modèle: 0.1315
+
+Coefficients standardisés:
+  TUU2017: 35.1905
+  TDUU2017: -34.0221
+  MED21: 0.6964
+  Intercept: 189.9892
+
+Interprétation:
+  - Un R² plus proche de 1 indique un meilleur ajustement.
+  - Les coefficients indiquent l'effet marginal de chaque variable.
+  - Le R² est faible, suggérant que les variables socio-économiques
+    expliquent peu la variation du coût du panier.
